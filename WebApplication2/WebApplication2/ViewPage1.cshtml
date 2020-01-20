@@ -2,6 +2,8 @@
     Layout = null;
 }
 
+@{ var price = 50; }
+
 <!DOCTYPE html>
 
 <html>
@@ -14,6 +16,8 @@
     <h1> my first test page</h1>
         <p>Another line of text</p>
         <a href="http://www.nait.ca">a link</a>
+        @if (price > 30) { <h3> The Price is high</h3>}
+        else { <h5>the price is wrong</h5>}
     </div>
 </body>
 </html>

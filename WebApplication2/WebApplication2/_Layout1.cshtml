@@ -1,0 +1,13 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>@Page.Title Hello World!</title>
+    @RenderSection("head", required: true)
+</head>
+<body>
+    @RenderSection("Greetings", required: true)
+    @RenderBody()
+    <h1>@DateTime.Today.ToLongDateString()</h1>
+    
+</body>
+</html>
