@@ -1,0 +1,39 @@
+﻿@{
+    Layout = "~/_Layout.cshtml";
+    Page.Title = "Exercise 01";
+}
+@section head{
+    <link href="~/Content/myStyleSheet.css" rel="stylesheet" />
+}
+@section banner{
+    <h1>Exercise 01</h1>}
+<div>
+    <form id="EX01" method="post">
+        <div class="row">
+            <div class="col-md-6">
+                <label> Enter your Name</label><br />
+                <input id="Text1" type="text" />
+
+            </div>
+
+            <div class="col-md-9">
+                <label>Your Choice</label> <br />
+
+                <input id="Checkbox1" type="checkbox" />Steak <br />
+                <input id="Checkbox1" type="checkbox" />Roast Beef <br />
+                <input id="Checkbox1" type="checkbox" />Yuge Mushroom<br />
+            </div>
+        </div>
+        <div class="row">
+
+
+        </div>
+
+
+    </form>
+</div>
+@section footer{
+    <p>&copy CPSC1517, Nait Today's date is @DateTime.Today.ToLongDateString().</p> }
+
+
+
