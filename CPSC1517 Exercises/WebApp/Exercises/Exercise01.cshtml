@@ -1,0 +1,86 @@
+﻿@{
+    Layout = "~/_Layout.cshtml";
+    Page.Title = "Exercise 01";
+
+    var theButton = Request.Form["theButton"];
+    var myName = Request.Form["dataentry"];
+    var mealSteak = Request.Form["Checkbox1"];
+    var mealBeef = Request.Form["Checkbox2"];
+    var mealShrooms = Request.Form["Checkbox3"];
+}
+@section head{
+    <link href="~/Content/myStyleSheet.css" rel="stylesheet" />
+}
+@section banner{
+    <h1>Exercise 01: Basic Form Processing</h1>
+}
+
+@if (IsPost)
+{
+    if (theButton == "submit")
+    {
+        if (string.IsNullOrEmpty(myName))
+        {
+            <p>You did not enter a name.</p>
+        }
+        else
+        {
+            <p>@myName, I see you have selected the following meals:</p>
+            if (!string.IsNullOrEmpty(mealSteak))
+            {
+
+                <p><b>Steak</b></p>
+            }
+            if (!string.IsNullOrEmpty(mealBeef))
+            {
+
+                <p><b>Roast beef</b></p>
+            }
+            if (!string.IsNullOrEmpty(mealShrooms))
+            {
+
+                <p><b>Mushroom burger</b></p>
+            }
+        }
+    }
+    else
+    {
+        myName = "";
+        <p>User has pressed the clear button</p>
+    }
+}
+else
+{
+
+    <p>First time on this page.</p>
+}
+<div>
+    <form id="EX01" method="post">
+        <div class="row">
+            <div class="col-md-2">
+                <label> Enter your Name</label><br />
+                <input type="text" id="dataentry" name="dataentry"
+                       value="@myName" />
+            </div>
+            <div class="col-md-2">
+                <label>Your Choice</label> <br />
+                <input id="Checkbox1" type="checkbox" name="Checkbox1" />Steak <br />
+                <input id="Checkbox2" type="checkbox" name="Checkbox2"/>Roast Beef <br />
+                <input id="Checkbox3" type="checkbox" name="Checkbox3"/>Mushroom Burger<br />
+            </div>
+        </div>
+        <div class="row">
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <button type="submit" id="PressMe" name="theButton" value="submit">Submit</button>
+            &nbsp;&nbsp;
+            <input type="submit" id="PressMe" name="theButton" value="Clear" />
+        </div>
+
+
+    </form>
+</div>
+@section footer{
+    <p>&copy CPSC1517, Nait Today's date is @DateTime.Today.ToLongDateString().</p> }
+
+
+
