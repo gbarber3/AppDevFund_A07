@@ -32,7 +32,7 @@
 
     //create an instance of WebGrid
     //notice the collection is passed at the time of instantiation
-    var gridinstance = new WebGrid(results);
+    var gridinstance = new WebGrid(results, rowsPerPage:5);
 }
 @section banner{
     <span style="font-size:xx-large"><strong>Multi-Record WebGrid</strong></span>
@@ -49,12 +49,23 @@
                 </strong>
             </span>
             <!--Display the WebGrid instance in its default display-->
-            @gridinstance.GetHtml(columns: gridinstance.Columns(
-                gridinstance.Column(columnName: "ProductID", header: "ID"),
-                gridinstance.Column(columnName: "ProductName", header: "Product"),
-                gridinstance.Column(columnName: "UnitsInStock", header: "Quantity"),
-                gridinstance.Column(columnName: "UnitPrice", header: "Price"),
-                gridinstance.Column(columnName: "Discontinued", header: "Discontinued")));
+            @gridinstance.GetHtml(
+               tableStyle: "table table-bordered table-striped table-hover",
+               mode: WebGridPagerModes.All,
+               firstText:"start",
+               lastText: "end",
+               columns: gridinstance.Columns(
+                    gridinstance.Column(columnName: "ProductID", header: "ID"),
+                    gridinstance.Column(columnName: "ProductName", header: "Product"),
+                    gridinstance.Column(columnName: "UnitsInStock", header: "Quantity"),
+                    gridinstance.Column(columnName: "UnitPrice", header: "$", format: (item)=>item.UnitPrice.ToString("0.00")),
+                    gridinstance.Column(columnName: "Discontinued", header: "Discontinued",
+                        format: @<input name="Discontinued" type="checkbox"
+                                        value="@item.Discontinued" @(item.Discontinued == true ? "checked" : null)
+                                        disabled="disabled" />),
+                   gridinstance.Column(header: "", format: @<text> <a href="~/DBPages/WebGridDestination.cshtml?pid=@item.ProductID"
+                                                                    onclick="return confirm('Are you sure you wish to view the product details of @item.ProductID  ?')">View</</a></text>)
+                    ))
         </div>
     </div>
 </div>

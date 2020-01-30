@@ -1,0 +1,20 @@
+﻿@{
+    // this is a comment in c#
+    Page.Title = "WebGrid View";
+    //Layout = "~/_Layout.cshtml";
+    Layout = "~/_LayoutMenu.cshtml";
+}
+
+@section head{
+    <link href="~/Content/myStyleSheet.css" rel="stylesheet" />
+}
+@section banner{
+    <span style="font-size:xx-large">
+        <strong>Database: Value from
+            WebGrid
+        </strong>
+    </span>
+}
+<div>
+    <h4> You passed the value @Request.QueryString["pid"]</h4>
+</div>
