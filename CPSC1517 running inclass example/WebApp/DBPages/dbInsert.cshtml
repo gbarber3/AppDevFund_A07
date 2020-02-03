@@ -1,0 +1,114 @@
+﻿@{
+    Page.Title = "DB Insert";
+    Layout = "~/_LayoutMenu.cshtml";
+
+    var db = Database.Open("NWDB"); //open that DB up son
+
+    var formButton = Request.Form["FormButton"];
+
+    var productName = "";
+    var selectedSupplier = "";
+    var selectedCategory = "";
+    var quantityperUnit = "";
+    var unitPrice = "";
+    var unitsInStock = "";
+    var unitsOnOrder = "";
+    var reorderLevel = "";
+    var discontinued = "";
+}
+
+
+@section banner{
+    <span style="font-size:xx-large"><strong>DB Insert Example</strong></span>
+}
+
+@if (IsPost)
+{
+    if (formButton.Equals("reset")) //clear that form
+    {
+        <p class="col-sm-11 text-center">Cleared by user</p>
+        discontinued = "";
+    }
+    else//grab that data from the form
+    {
+        productName = Request.Form["ProductName"];
+        selectedSupplier = Request.Form["Supplier"];
+        selectedCategory = Request.Form["Category"];
+        quantityperUnit = Request.Form["QuantityperUnit"];
+        unitPrice = Request.Form["UnitPrice"];
+        unitsInStock = Request.Form["UnitsInStock"];
+        unitsOnOrder = Request.Form["UnitsOnOrder"];
+        reorderLevel = Request.Form["ReorderLevel"];
+
+        discontinued = Request.Form["Discontinued"];//checkboxes return either null (not checked) or "on" for checked.
+
+        try
+        {
+            var insertCommand = "INSERT INTO Products (ProductName, SupplierID, CategoryID, QuantityPerUnit, UnitPrice, UnitsInStock, UnitsOnOrder, ReorderLevel, Discontinued)" +
+                                "VALUES(@0, @1, @2, @3, @4, @5, @6, @7, @8)";
+
+            db.Execute(
+                insertCommand, productName,
+                string.IsNullOrEmpty(selectedSupplier) ? null : selectedSupplier,
+                string.IsNullOrEmpty(selectedCategory) ? null : selectedCategory,
+                string.IsNullOrEmpty(quantityperUnit) ? null : quantityperUnit,
+                string.IsNullOrEmpty(unitPrice) ? null : unitPrice,
+                string.IsNullOrEmpty(unitsInStock) ? null : unitsInStock,
+                string.IsNullOrEmpty(unitsOnOrder) ? null : unitsOnOrder,
+                string.IsNullOrEmpty(reorderLevel) ? null : reorderLevel,
+                string.IsNullOrEmpty(discontinued) ? 0 : 1
+                );
+            <p class="col-sm-11 text-center">New product added to file</p>
+        }
+
+        catch (Exception ex)
+        {
+            <p class="col-sm-11 text-center">@ex.Message</p>
+        }
+    }
+}
+
+<div>
+
+    <form id="theForm" action="" method="post">
+        <div class="row">
+            <div class="col-sm-5 text-right">
+                <!-- First column, labels-->
+                <label id="forProductName">Name:</label><br />
+                <label id="forSupplier">Supplier:</label><br />
+                <label id="forCategory">Category:</label><br />
+                <label id="forQuantityPerUnit">Qty/Units:</label><br />
+                <label id="forUnitPrice">price:</label><br />
+                <label id="forUnitsInStock">QOH:</label><br />
+                <label id="forUnitsOnOrder">UnitsOnOrder:</label><br />
+                <label id="forReorderLevel">Reorder Level:</label><br />
+                <label id="forDiscontinued">Disc.:</label><br />
+            </div>
+
+            <div class="col-sm-6">
+                <!-- Second column, inserts-->
+                <input type="text" name="ProductName" id="ProductName" value="@productName" placeholder="product name" /><br />
+                <input type="text" name="Supplier" id="Supplier" value="@selectedSupplier" placeholder="supplier id" /><br />
+                <input type="text" name="Category" id="Category" value="@selectedCategory" placeholder="category id" /><br />
+                <input type="text" name="QuantityperUnit" id="QuantityperUnit" value="@quantityperUnit" /><br />
+                <input type="text" name="UnitPrice" id="UnitPrice" value="@unitPrice" /><br />
+                <input type="text" name="UnitsInStock" id="UnitsInStock" value="@unitsInStock" title="Quantity currently in inventory" /><br />
+                <input type="text" name="UnitsOnOrder" id="UnitsOnOrder" value="@unitsOnOrder" title="Quantity currently on order" /><br />
+                <input type="text" name="ReorderLevel" id="ReorderLevel" value="@reorderLevel" title="Quantity safety level" /><br />
+                <input type="checkbox" name="Discontinued" title="Product is discontinued if checked." @(string.IsNullOrEmpty(discontinued) ? "" : "checked") /><br />
+
+            </div>
+        </div>
+
+        <br /><br />
+
+        <div class="row">
+            <!-- ITS BUTTON TIME SON-->
+            <div class="col-sm-11 text-center">
+                <button type="submit" name="FormButton" value="submit" class="btn btn-primary" style="width:90px">Add</button>
+                &nbsp;&nbsp;
+                <button type="submit" name="FormButton" value="reset" class="btn" style="width:90px">Clear</button>
+            </div>
+        </div>
+    </form>
+</div>
