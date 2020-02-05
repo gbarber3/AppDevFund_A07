@@ -1,16 +1,50 @@
 ﻿@{
     Layout = "~/_Layout.cshtml";
     Page.Title = "Exercise 02";
+    var db = Database.Open("CHDB"); //open chinook database
 
-}
-@section head{
-    <link href="~/Content/myStyleSheet.css" rel="stylesheet" />
+    var artistsName = Request.QueryString["cid"];
+    var partialString = "%" + artistsName + "%";
+
+    if (string.IsNullOrEmpty(artistsName))
+    {
+        Response.Redirect("Exercise02B.cshtml");
+    }
+    else
+    {
+        var artistQuery = "SELECT ArtistId, Name " +
+                    "FROM Artists " +
+                    "WHERE Name like @0 " +
+                    "ORDER BY Name";
+
+        var artistTable = db.Query(artistQuery, artistsName);
+    }
 }
 @section banner{
-    <h1>Exercise 02: Basic Form Processing</h1>
+    <span style="font-size:xx-large"><strong>Artists Selection</strong></span>
 }
 
-@if (IsPost)
-{
 
-}
+
+<div>
+    <form id="EX01" method="post">
+        <div class="row">
+            <div class="col-md-2">
+                <label> Select an Artist's Name</label><br />
+                <input type="text" id="dataentry" name="dataentry"
+                       value="@artistsName" />
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <button type="submit" id="PressMe" name="theButton" value="submit">Fetch Albums</button>
+            &nbsp;&nbsp;
+            <input type="submit" id="PressMe" name="theButton" value="Clear" />
+        </div>
+
+
+    </form>
+</div>
+@section footer{
+    <p>&copy CPSC1517, Nait Today's date is @DateTime.Today.ToLongDateString().</p> }

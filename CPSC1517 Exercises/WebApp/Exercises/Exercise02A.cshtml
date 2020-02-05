@@ -1,17 +1,74 @@
 ﻿@{
-    Layout = null;
+    Layout = "~/_Layout.cshtml";
+    Page.Title = "Exercise 02";
+
+    var db = Database.Open("CHDB"); //open chinook database
+    var theButton = Request.Form["theButton"];
+    var artistName = Request.Form["dataentry"];
+
+    var artistQuery = "SELECT ArtistId "
+                    + "FROM Artists "
+                    + "WHERE Name like @0";
+    var partialString= "%" + artistName + "%";
+    var artistResults = db.Query(artistQuery, partialString);
+
+
+
+}
+@section head{
+    <link href="~/Content/myStyleSheet.css" rel="stylesheet" />
+}
+@section banner{
+    <h1>Exercise 02: Page Processing</h1>
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title></title>
-</head>
-<body>
-    <div>
+@if (IsPost)
+{
     
-    </div>
-</body>
-</html>
+    if (theButton == "submit")
+    {
+        if (string.IsNullOrEmpty(artistName))
+        {
+            <p>You did not enter a name.</p>
+        }
+        else
+        {
+            if (artistResults.Count() == 0)
+            {
+                <p>Sorry, no artists containing that phrase exist in the database</p>
+            }
+            else
+            {
+                Response.Redirect("Exercise02B.cshtml?cid=" + artistName);
+            }
+        }
+    }
+    else
+    {
+        artistName = "";
+        <p>User has pressed the clear button</p>
+    }
+}
+
+<div>
+    <form id="EX01" method="post">
+        <div class="row">
+            <div class="col-md-2">
+                <label> Enter an Artist's Name</label><br />
+                <input type="text" id="dataentry" name="dataentry"
+                       value="@artistName" />
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <button type="submit" id="PressMe" name="theButton" value="submit">Fetch Artist</button>
+            &nbsp;&nbsp;
+            <input type="submit" id="PressMe" name="theButton" value="Clear" />
+        </div>
+
+
+    </form>
+</div>
+@section footer{
+    <p>&copy CPSC1517, Nait Today's date is @DateTime.Today.ToLongDateString().</p> }
