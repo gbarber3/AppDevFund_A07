@@ -15,6 +15,16 @@
     var unitsOnOrder = "";
     var reorderLevel = "";
     var discontinued = "";
+
+    var supplierQueryCommand = "SELECT SupplierID, CompanyName "
+                        + "FROM Suppliers "
+                        + "ORDER BY 2";
+    var supplierResults = db.Query(supplierQueryCommand);
+
+    var categoryQueryCommand = "SELECT CategoryID, CategoryName "
+                        + "FROM Categories "
+                        + "ORDER BY 2";
+    var categoryResults = db.Query(categoryQueryCommand);
 }
 
 
@@ -32,8 +42,8 @@
     else//grab that data from the form
     {
         productName = Request.Form["ProductName"];
-        selectedSupplier = Request.Form["Supplier"];
-        selectedCategory = Request.Form["Category"];
+        selectedSupplier = Request.Form["Supplier ID"];
+        selectedCategory = Request.Form["Category ID"];
         quantityperUnit = Request.Form["QuantityperUnit"];
         unitPrice = Request.Form["UnitPrice"];
         unitsInStock = Request.Form["UnitsInStock"];
@@ -88,8 +98,51 @@
             <div class="col-sm-6">
                 <!-- Second column, inserts-->
                 <input type="text" name="ProductName" id="ProductName" value="@productName" placeholder="product name" /><br />
-                <input type="text" name="Supplier" id="Supplier" value="@selectedSupplier" placeholder="supplier id" /><br />
-                <input type="text" name="Category" id="Category" value="@selectedCategory" placeholder="category id" /><br />
+                <select id="Supplier" name="Supplier">
+                    <option value="0">select ...</option>
+                    @foreach (var item in supplierResults)
+                    {
+                        //loop through the collection of records in the ddlResults
+                        //create a line in the ddl for each item (category) in ddlResults
+                        //referencing of the data items on each row
+                        //    is done using either the [index] technique
+                        //    or using the properties (.ColumnTitleName)
+                        //    to point to the specific data
+                        //<option value="@item[0]">@item.CompanyName</option>
+                        if (selectedSupplier.Equals(item[0].ToString()))
+                        {
+                            <option value="@item[0]" selected>@item.CompanyName</option>
+                        }
+                        else
+                        {
+                            <option value="@item[0]">@item.CompanyName</option>
+                        }
+                    }
+                </select><br />
+                         <select id="Category" name="Category">
+                             <option value="0">select ...</option>
+                             @foreach (var item2 in categoryResults)
+                             {
+                                 //loop through the collection of records in the ddlResults
+                                 //create a line in the ddl for each item (category) in ddlResults
+                                 //referencing of the data items on each row
+                                 //    is done using either the [index] technique
+                                 //    or using the properties (.ColumnTitleName)
+                                 //    to point to the specific data
+                                 
+                                 // <option value="@item2[0]">@item2.CategoryName</option>
+
+                                 if (selectedCategory.Equals(item2[0].ToString()))
+                                 {
+                                     <option value="@item2[0]" selected>@item2.CategoryName</option>
+                                 }
+                                 else
+                                 {
+                                     <option value="@item2[0]">@item2.CategoryName</option>
+                                 }
+                             }
+                         </select>
+                <br />
                 <input type="text" name="QuantityperUnit" id="QuantityperUnit" value="@quantityperUnit" /><br />
                 <input type="text" name="UnitPrice" id="UnitPrice" value="@unitPrice" /><br />
                 <input type="text" name="UnitsInStock" id="UnitsInStock" value="@unitsInStock" title="Quantity currently in inventory" /><br />
