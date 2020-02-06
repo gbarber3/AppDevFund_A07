@@ -101,6 +101,8 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Exercises\BasicForms.cshtml" />
     <Content Include="Exercises\Exercise01.cshtml" />
+    <Content Include="Exercises\Exercise02B.cshtml" />
+    <Content Include="Exercises\Exercise02A.cshtml" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -110,8 +112,6 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
-    <Content Include="Exercises\Exercise02B.cshtml" />
-    <Content Include="Exercises\Exercise02A.cshtml" />
     <None Include="packages.config" />
     <Content Include="Default.cshtml" />
     <Content Include="Scripts\bootstrap.js" />
@@ -203,6 +203,7 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
+    <Content Include="WebConnectionStrings.config" />
     <Content Include="Scripts\umd\popper.min.js.map" />
     <Content Include="Scripts\umd\popper.js.map" />
     <Content Include="Scripts\umd\popper.js.flow" />
@@ -213,7 +214,6 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
-    <Content Include="WebConnectionStrings.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
