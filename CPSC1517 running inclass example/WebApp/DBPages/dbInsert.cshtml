@@ -1,115 +1,123 @@
 ﻿@{
-    Page.Title = "DB Insert";
+    Page.Title = "Insert";
     Layout = "~/_LayoutMenu.cshtml";
 
-    var db = Database.Open("NWDB"); //open that DB up son
+    var formbutton = Request.Form["FormButton"];
 
-    var formButton = Request.Form["FormButton"];
-
-    var productName = "";
-    var selectedSupplier = "";
-    var selectedCategory = "";
-    var quantityperUnit = "";
-    var unitPrice = "";
-    var unitsInStock = "";
-    var unitsOnOrder = "";
-    var reorderLevel = "";
+    var productname = "";
+    var selectedsupplier = "";
+    var selectedcategory = "";
+    var quantityperunit = "";
+    var unitprice = "";
+    var unitsinstock = "";
+    var unitsonorder = "";
+    var reorderlevel = "";
     var discontinued = "";
 
-    var supplierQueryCommand = "SELECT SupplierID, CompanyName "
-                        + "FROM Suppliers "
-                        + "ORDER BY 2";
-    var supplierResults = db.Query(supplierQueryCommand);
-
-    var categoryQueryCommand = "SELECT CategoryID, CategoryName "
+    //connect to the database
+    var db = Database.Open("NWDB");
+    var supplierquery = "SELECT SupplierID, CompanyName "
+                + "FROM Suppliers "
+                + "ORDER BY 2";
+    var categoryquery = "SELECT CategoryID, CategoryName "
                         + "FROM Categories "
                         + "ORDER BY 2";
-    var categoryResults = db.Query(categoryQueryCommand);
-}
+    var supplierlist = db.Query(supplierquery);
+    var categorylist = db.Query(categoryquery);
 
+    Validation.Add("ProductName", Validator.Required("Product Name is Required"));
+}
 
 @section banner{
-    <span style="font-size:xx-large"><strong>DB Insert Example</strong></span>
+    <span style="font-size:xx-large"><strong>CRUD: Insert</strong></span>
 }
-
 @if (IsPost)
 {
-    if (formButton.Equals("reset")) //clear that form
+    if (formbutton.Equals("reset"))
     {
         <p class="col-sm-11 text-center">Cleared by user</p>
         discontinued = "";
     }
-    else//grab that data from the form
+
+    else if (Validation.IsValid() == true)
     {
-        productName = Request.Form["ProductName"];
-        selectedSupplier = Request.Form["Supplier ID"];
-        selectedCategory = Request.Form["Category ID"];
-        quantityperUnit = Request.Form["QuantityperUnit"];
-        unitPrice = Request.Form["UnitPrice"];
-        unitsInStock = Request.Form["UnitsInStock"];
-        unitsOnOrder = Request.Form["UnitsOnOrder"];
-        reorderLevel = Request.Form["ReorderLevel"];
+        //collect the data from the input controls
+        productname = Request.Form["ProductName"];
+        selectedsupplier = Request.Form["Supplier"];
+        selectedcategory = Request.Form["Category"];
+        quantityperunit = Request.Form["QuantityPerUnit"];
+        unitprice = Request.Form["UnitPrice"];
+        unitsinstock = Request.Form["UnitsInStock"];
+        unitsonorder = Request.Form["UnitsOnOrder"];
+        reorderlevel = Request.Form["ReorderLevel"];
+        //checkboxs return null (not checked) and "on" (checked)
+        discontinued = Request.Form["Discontinued"];
 
-        discontinued = Request.Form["Discontinued"];//checkboxes return either null (not checked) or "on" for checked.
-
+        //all of this needs to be warpped inside a Try/Catch
         try
         {
-            var insertCommand = "INSERT INTO Products (ProductName, SupplierID, CategoryID, QuantityPerUnit, UnitPrice, UnitsInStock, UnitsOnOrder, ReorderLevel, Discontinued)" +
-                                "VALUES(@0, @1, @2, @3, @4, @5, @6, @7, @8)";
 
-            db.Execute(
-                insertCommand, productName,
-                string.IsNullOrEmpty(selectedSupplier) ? null : selectedSupplier,
-                string.IsNullOrEmpty(selectedCategory) ? null : selectedCategory,
-                string.IsNullOrEmpty(quantityperUnit) ? null : quantityperUnit,
-                string.IsNullOrEmpty(unitPrice) ? null : unitPrice,
-                string.IsNullOrEmpty(unitsInStock) ? null : unitsInStock,
-                string.IsNullOrEmpty(unitsOnOrder) ? null : unitsOnOrder,
-                string.IsNullOrEmpty(reorderLevel) ? null : reorderLevel,
-                string.IsNullOrEmpty(discontinued) ? 0 : 1
-                );
-            <p class="col-sm-11 text-center">New product added to file</p>
+            //does the sql table generate the primary key?
+            //create an sql Insert command
+            var insertcommand = "INSERT INTO Products (ProductName, SupplierID, "
+                            + "CategoryID, QuantityPerUnit, UnitPrice, UnitsInStock, "
+                            + "UnitsOnOrder, ReorderLevel, Discontinued) "
+                            + "VALUES(@0,@1,@2,@3,@4,@5,@6,@7,@8)";
+            //run the Insert command
+            db.Execute(insertcommand, productname,
+                string.IsNullOrEmpty(selectedsupplier) ? null : selectedsupplier,
+                string.IsNullOrEmpty(selectedcategory) ? null : selectedcategory,
+                string.IsNullOrEmpty(quantityperunit) ? null : quantityperunit,
+                string.IsNullOrEmpty(unitprice) ? null : unitprice,
+                string.IsNullOrEmpty(unitsinstock) ? null : unitsinstock,
+                string.IsNullOrEmpty(unitsonorder) ? null : unitsonorder,
+                string.IsNullOrEmpty(reorderlevel) ? null : reorderlevel,
+                string.IsNullOrEmpty(discontinued) ? 0 : 1);
+            <p class="col-sm-11 text-center">
+                <span style="color:green">
+                    New product added to file
+                </span>
+            </p>
+
         }
-
         catch (Exception ex)
         {
-            <p class="col-sm-11 text-center">@ex.Message</p>
+            <p class="col-sm-11 text-center">
+                <span style="color:firebrick">
+                    <strong>@ex.Message</strong>
+                </span>
+            </p>
         }
     }
 }
-
+else
+{
+    //initialized values for input controls
+    //that will be used on the first pass of the page
+}
 <div>
-
     <form id="theForm" action="" method="post">
         <div class="row">
+
             <div class="col-sm-5 text-right">
-                <!-- First column, labels-->
                 <label id="forProductName">Name:</label><br />
                 <label id="forSupplier">Supplier:</label><br />
                 <label id="forCategory">Category:</label><br />
-                <label id="forQuantityPerUnit">Qty/Units:</label><br />
-                <label id="forUnitPrice">price:</label><br />
+                <label id="forQuantityPerUnit">Qty/Unit:</label><br />
+                <label id="forUnitPrice">Price:</label><br />
                 <label id="forUnitsInStock">QOH:</label><br />
-                <label id="forUnitsOnOrder">UnitsOnOrder:</label><br />
-                <label id="forReorderLevel">Reorder Level:</label><br />
+                <label id="forUnitsOnOrder">QOO:</label><br />
+                <label id="forReorderLevel">ROL:</label><br />
                 <label id="forDiscontinued">Disc.:</label><br />
             </div>
-
             <div class="col-sm-6">
-                <!-- Second column, inserts-->
-                <input type="text" name="ProductName" id="ProductName" value="@productName" placeholder="product name" /><br />
+                <input type="text" name="ProductName" id="ProductName" value="@productname"
+                       placeholder="product name" />@Html.ValidationMessage("ProductName")<br />
                 <select id="Supplier" name="Supplier">
                     <option value="0">select ...</option>
-                    @foreach (var item in supplierResults)
+                    @foreach (var item in supplierlist)
                     {
-                        //loop through the collection of records in the ddlResults
-                        //create a line in the ddl for each item (category) in ddlResults
-                        //referencing of the data items on each row
-                        //    is done using either the [index] technique
-                        //    or using the properties (.ColumnTitleName)
-                        //    to point to the specific data
-                        //<option value="@item[0]">@item.CompanyName</option>
-                        if (selectedSupplier.Equals(item[0].ToString()))
+                        if (selectedsupplier.Equals(item[0].ToString()))
                         {
                             <option value="@item[0]" selected>@item.CompanyName</option>
                         }
@@ -117,50 +125,50 @@
                         {
                             <option value="@item[0]">@item.CompanyName</option>
                         }
+
                     }
                 </select><br />
-                         <select id="Category" name="Category">
-                             <option value="0">select ...</option>
-                             @foreach (var item2 in categoryResults)
-                             {
-                                 //loop through the collection of records in the ddlResults
-                                 //create a line in the ddl for each item (category) in ddlResults
-                                 //referencing of the data items on each row
-                                 //    is done using either the [index] technique
-                                 //    or using the properties (.ColumnTitleName)
-                                 //    to point to the specific data
-                                 
-                                 // <option value="@item2[0]">@item2.CategoryName</option>
+                <select id="Category" name="Category">
+                    <option value="0">select ...</option>
+                    @foreach (var item in categorylist)
+                    {
+                        if (selectedcategory.Equals(item[0].ToString()))
+                        {
+                            <option value="@item.CategoryID" selected>@item[1]</option>
+                        }
+                        else
+                        {
+                            <option value="@item.CategoryID">@item[1]</option>
+                        }
 
-                                 if (selectedCategory.Equals(item2[0].ToString()))
-                                 {
-                                     <option value="@item2[0]" selected>@item2.CategoryName</option>
-                                 }
-                                 else
-                                 {
-                                     <option value="@item2[0]">@item2.CategoryName</option>
-                                 }
-                             }
-                         </select>
-                <br />
-                <input type="text" name="QuantityperUnit" id="QuantityperUnit" value="@quantityperUnit" /><br />
-                <input type="text" name="UnitPrice" id="UnitPrice" value="@unitPrice" /><br />
-                <input type="text" name="UnitsInStock" id="UnitsInStock" value="@unitsInStock" title="Quantity currently in inventory" /><br />
-                <input type="text" name="UnitsOnOrder" id="UnitsOnOrder" value="@unitsOnOrder" title="Quantity currently on order" /><br />
-                <input type="text" name="ReorderLevel" id="ReorderLevel" value="@reorderLevel" title="Quantity safety level" /><br />
-                <input type="checkbox" name="Discontinued" title="Product is discontinued if checked." @(string.IsNullOrEmpty(discontinued) ? "" : "checked") /><br />
-
+                    }
+                </select><br />
+                <input type="text" name="QuantityPerUnit" id="QuantityPerUnit" value="@quantityperunit" /><br />
+                <input type="text" name="UnitPrice" id="UnitPrice" value="@unitprice" /><br />
+                <input type="text" name="UnitsInStock" id="UnitsInStock" value="@unitsinstock"
+                       title="Quantity currently in inventory." /><br />
+                <input type="text" name="UnitsOnOrder" id="UnitsOnOrder" value="@unitsonorder"
+                       title="Quantity currently on Order." /><br />
+                <input type="text" name="ReorderLevel" id="ReorderLevel" value="@reorderlevel"
+                       title="Quantity safety level." /><br />
+                <input type="checkbox" name="Discontinued"
+                       title="Product is dicontinued if checked."
+                       @(string.IsNullOrEmpty(discontinued) ? "" : "checked") /><br />
             </div>
         </div>
 
-        <br /><br />
-
         <div class="row">
-            <!-- ITS BUTTON TIME SON-->
+
             <div class="col-sm-11 text-center">
-                <button type="submit" name="FormButton" value="submit" class="btn btn-primary" style="width:90px">Add</button>
+                <button type="submit" name="FormButton" value="submit"
+                        class="btn btn-primary" style="width:90px">
+                    Add
+                </button>
                 &nbsp;&nbsp;
-                <button type="submit" name="FormButton" value="reset" class="btn" style="width:90px">Clear</button>
+                <button type="submit" name="FormButton" value="reset"
+                        class="btn" style="width:90px">
+                    Clear
+                </button>
             </div>
         </div>
     </form>

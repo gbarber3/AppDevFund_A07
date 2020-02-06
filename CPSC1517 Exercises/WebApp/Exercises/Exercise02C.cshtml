@@ -1,0 +1,60 @@
+﻿@{
+    Layout = "~/_Layout.cshtml";
+    Page.Title = "Exercise 03";
+
+    var db = Database.Open("CHDB"); //open chinook database
+    var theButton = Request.Form["theButton"];
+    var artistID = Request.QueryString["cid"];
+
+    var artistQuery = "SELECT AlbumId, Title, ReleaseYear, ReleaseLabel "
+                    + "FROM Albums "
+                    + "WHERE ArtistId = @0 "
+                    + "ORDER BY Title";
+    var artistResults = db.Query(artistQuery, artistID);
+
+    var artistNameQuery = "SELECT Name FROM Artists WHERE ArtistId = @0";
+    var artistName = db.QueryValue(artistNameQuery, artistID);
+
+    var gridInstance = new WebGrid(artistResults, rowsPerPage: 20); //make sure we have a grid tool
+
+}
+@section head{
+    <link href="~/Content/myStyleSheet.css" rel="stylesheet" />
+}
+@section banner{
+    <h1>Exercise 04: Albums</h1>
+    @if (string.IsNullOrEmpty(artistID))
+    {
+        Response.Redirect("Exercise02A.cshtml");
+    }
+}
+
+@if (IsPost)
+{
+}
+
+<div>
+    <div class="row">
+        <div class="col-sm-6">
+            <span style="font-size:x-large">
+                <strong>
+                    Albums of @artistName
+                </strong>
+            </span>
+            <!--Display the WebGrid instance in its default display-->
+            @gridInstance.GetHtml(
+               tableStyle: "table table-bordered table-striped table-hover",
+               mode: WebGridPagerModes.All,
+               firstText: "start",
+               lastText: "end",
+               columns: gridInstance.Columns
+               (
+                    gridInstance.Column(columnName: "AlbumId", header: "ID"),
+                    gridInstance.Column(columnName: "Title", header: "Title"),
+                    gridInstance.Column(columnName: "ReleaseYear", header: "Released"),
+                    gridInstance.Column(columnName: "ReleaseLabel", header: "Label")
+                )
+            )
+        </div>
+    </div>
+</div>
