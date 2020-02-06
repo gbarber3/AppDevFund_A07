@@ -27,40 +27,40 @@
     
     if (theButton == "submit")
     {
-        if (string.IsNullOrEmpty(artistName))
+        if (string.IsNullOrEmpty(artistName)) //check if user enter a name, tell them off if they didnt
         {
             <p>You did not enter a name.</p>
         }
         else
         {
-            if (artistResults.Count() == 0)
+            if (artistResults.Count() == 0) //see if that search returned a thing or not
             {
-                <p>Sorry, no artists containing that phrase exist in the database</p>
+                <p>Sorry, no artists containing that phrase exist in the database</p> 
             }
             else
             {
-                Response.Redirect("Exercise02B.cshtml?cid=" + artistName);
+                Response.Redirect("Exercise02B.cshtml?cid=" + artistName); //if the artist name has results, throw them to page B, along with the artistName
             }
         }
     }
     else
     {
         artistName = "";
-        <p>User has pressed the clear button</p>
+        <p>User has pressed the clear button</p> //I swear if you can't figure out what this does...
     }
 }
 
 <div>
     <form id="EX01" method="post">
         <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-2"> <!-- make a medium ish colum for data entry-->
                 <label> Enter an Artist's Name</label><br />
                 <input type="text" id="dataentry" name="dataentry"
-                       value="@artistName" />
+                       value="@artistName" /> 
             </div>
         </div>
         <br />
-        <div class="row">
+        <div class="row"> <!-- make some buttons for user to interact with-->
             &nbsp;&nbsp;&nbsp;&nbsp;
             <button type="submit" id="PressMe" name="theButton" value="submit">Fetch Artist</button>
             &nbsp;&nbsp;

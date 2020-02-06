@@ -1,17 +1,23 @@
 ﻿@{
-    Layout = null;
-}
+    Layout = "~/_Layout.cshtml";
+    Page.Title = "Exercise 02";
 
-<!DOCTYPE html>
+    var db = Database.Open("CHDB"); //open chinook database
+    var theButton = Request.Form["theButton"];
+    var artistName = Request.Form["dataentry"];
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title></title>
-</head>
-<body>
-    <div>
+    var artistQuery = "SELECT ArtistId, Name "
+                    + "FROM Artists "
+                    + "ORDER BY Name";
     
-    </div>
-</body>
-</html>
+    var artistResults = db.Query(artistQuery);
+
+
+
+}
+@section head{
+    <link href="~/Content/myStyleSheet.css" rel="stylesheet" />
+}
+@section banner{
+    <h1>Exercise 03: Database Data Entry</h1>
+}

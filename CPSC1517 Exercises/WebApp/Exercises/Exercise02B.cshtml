@@ -4,7 +4,7 @@
     var db = Database.Open("CHDB"); //open chinook database
 
     var artistsName = Request.QueryString["cid"];
-    var partialString = "%" + artistsName + "%";
+    var partialString = "%" + artistsName + "%"; //make sure the SQL doesn't just search for exact terms
 
 
 
@@ -13,13 +13,13 @@
                     "WHERE Name like @0 " +
                     "ORDER BY Name";
 
-    var artistTable = db.Query(artistQuery, partialString);
+    var artistTable = db.Query(artistQuery, partialString); //use the partial string to actually search for all possible artists. Do not require over specificity.
 
     var selectedArtist = "";
 }
 @section banner{
     <span style="font-size:xx-large"><strong>Artists Selection</strong></span>
-    @if (string.IsNullOrEmpty(artistsName))
+    @if (string.IsNullOrEmpty(artistsName)) //if there's no data, return to start, do not collect $200
     {
         Response.Redirect("Exercise02A.cshtml");
     }
@@ -28,14 +28,14 @@
 @if (IsPost)
 {
 
-    selectedArtist = Request.Form["CategoryList"];
-    if(selectedArtist.Equals("0"))
+    selectedArtist = Request.Form["CategoryList"]; //update selected artist with whatever has been selected
+    if(selectedArtist.Equals("0"))  //0 is the 'select' option, so its nothing, tell the user to actually do the thing
     {
         <p>You must make a selection</p>
     }
     else
     {
-        Response.Redirect("Exercise02C.cshtml?cid=" + selectedArtist);
+        Response.Redirect("Exercise02C.cshtml?cid=" + selectedArtist); //they've selected well, send them to the display page. Give the display page their selection.
     }
     
 }
@@ -62,7 +62,7 @@
             </div>
         </div>
         <br />
-        <div class="row">
+        <div class="row"> <!-- clear is not required here, only one button-->
             &nbsp;&nbsp;&nbsp;&nbsp;
             <button type="submit" id="PressMe" name="theButton" value="submit">Fetch Albums</button>
             &nbsp;&nbsp;

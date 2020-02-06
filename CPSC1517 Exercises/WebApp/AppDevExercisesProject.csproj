@@ -113,6 +113,7 @@
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Exercises\Exercise02C.cshtml" />
+    <Content Include="Exercises\Exercise03.cshtml" />
     <None Include="packages.config" />
     <Content Include="Default.cshtml" />
     <Content Include="Scripts\bootstrap.js" />

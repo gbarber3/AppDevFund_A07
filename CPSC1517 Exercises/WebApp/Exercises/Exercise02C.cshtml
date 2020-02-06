@@ -10,10 +10,10 @@
                     + "FROM Albums "
                     + "WHERE ArtistId = @0 "
                     + "ORDER BY Title";
-    var artistResults = db.Query(artistQuery, artistID);
+    var artistResults = db.Query(artistQuery, artistID); //returns a matrix of results containing all the requested album info above
 
     var artistNameQuery = "SELECT Name FROM Artists WHERE ArtistId = @0";
-    var artistName = db.QueryValue(artistNameQuery, artistID);
+    var artistName = db.QueryValue(artistNameQuery, artistID); //QueryValue returns a STRING, rather than object.
 
     var gridInstance = new WebGrid(artistResults, rowsPerPage: 20); //make sure we have a grid tool
 
@@ -29,16 +29,16 @@
     }
 }
 
-@if (IsPost)
+@if (IsPost) //no buttons to hit here, do nothing
 {
 }
 
 <div>
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-6"> <!-- make the table a reasonable size-->
             <span style="font-size:x-large">
                 <strong>
-                    Albums of @artistName
+                    Albums of @artistName <!-- remember, only by using QueryValue did we get a single string that we can use like this at variable-->
                 </strong>
             </span>
             <!--Display the WebGrid instance in its default display-->
