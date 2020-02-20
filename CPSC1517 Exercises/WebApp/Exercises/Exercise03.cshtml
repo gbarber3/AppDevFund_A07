@@ -17,6 +17,7 @@
 
     var artistInsert = "INSERT INTO Albums (Title, ArtistId, ReleaseYear, ReleaseLabel) " +
                         "VALUES(@0, @1, @2, @3) ";
+
     Validation.Add("titleEntry",
         Validator.Required("Album Name is required"));
     Validation.Add("yearEntry",
@@ -33,7 +34,7 @@
     <h1>Exercise 03: Database Data Entry</h1>
 }
 
-@if(IsPost)
+@if (IsPost)
 {
     if (theButton.Equals("Clear"))
     {
@@ -46,16 +47,46 @@
     }
     else //do the things
     {
-       //fill from form
+        //fill from form
         artistName = Request.Form["artistSelect"];
         albumName = Request.Form["titleEntry"];
         albumYear = Request.Form["yearEntry"];
         albumLabel = Request.Form["labelEntry"];
-        <p>Artist ID is @artistName</p>
+        
+
+        if (Validation.IsValid())
+        {
+            try
+            {
+                db.Execute(artistInsert, albumName,
+                    string.IsNullOrEmpty(artistName) ? null : artistName,
+                    string.IsNullOrEmpty(albumYear) ? null : albumYear,
+                    string.IsNullOrEmpty(albumLabel) ? null : albumLabel
+                    );
+            <p class="col-sm-11 text-center">
+                <span style="color:green">
+                    Album added
+                </span>
+            </p>
+            }
+            catch (Exception ex)
+            {
+            <p class="col-sm-11 text-center">
+                <span style="color:firebrick">
+                    <strong>@ex.Message</strong>
+                </span>
+            </p>
+            }
+        }
+        else
+        {
+            <p>Validation failed</p>
+        }
     }
 }
 
 <div>
+    @Html.ValidationSummary()
     <form id="EX01" method="post">
         <div class="row">
             <div class="col-sm-3">
@@ -67,7 +98,7 @@
             </div>
             <div class="col-md-2">
                 <!-- inputs here-->
-                <input type="text" id="titleEntry" name="titleEntry" maxlength="160"/><br />
+                <input type="text" id="titleEntry" name="titleEntry" maxlength="160" /><br />
                 <select id="artistSelect" name="artistSelect">
                     <option value="0">select ...</option>
                     @foreach (var item in artistResults)
@@ -81,10 +112,10 @@
                             <option value="@item[0]">@item.Name</option>
                         }
                     }
-                 </select><br />
+                </select><br />
                 <input type="text" id="yearEntry" name="yearEntry" placeholder="1950-2020" /><br />
-                <input type="text" id="labelEntry" name="labelEntry"  maxlength="50"/><br />
-                
+                <input type="text" id="labelEntry" name="labelEntry" maxlength="50" /><br />
+
             </div>
         </div>
         <br />
