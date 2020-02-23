@@ -35,7 +35,8 @@
 
 <div>
     <div class="row">
-        <div class="col-sm-6"> <!-- make the table a reasonable size-->
+        <div class="col-sm-6">
+            <!-- make the table a reasonable size-->
             <span style="font-size:x-large">
                 <strong>
                     Albums of @artistName <!-- remember, only by using QueryValue did we get a single string that we can use like this at variable-->
@@ -52,8 +53,9 @@
                     gridInstance.Column(columnName: "AlbumId", header: "ID"),
                     gridInstance.Column(columnName: "Title", header: "Title"),
                     gridInstance.Column(columnName: "ReleaseYear", header: "Released"),
-                    gridInstance.Column(columnName: "ReleaseLabel", header: "Label")
-                )
+                    gridInstance.Column(columnName: "ReleaseLabel", header: "Label"),
+                    gridInstance.Column(header: "", format: @<text><a href="~/Exercises/Exercise04.cshtml?pid=@item.AlbumID">Edit</a></text>)
+                )                
             )
         </div>
     </div>

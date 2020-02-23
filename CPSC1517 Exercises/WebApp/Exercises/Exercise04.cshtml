@@ -1,0 +1,185 @@
+﻿@{
+    Layout = "~/_Layout.cshtml";
+    Page.Title = "Exercise 02";
+
+
+    var albumID = Request.QueryString["pid"];
+    if (albumID.IsEmpty())
+    {
+        Response.Redirect("Exercise02A.cshtml");
+    }
+    var db = Database.Open("CHDB"); //open chinook database
+    var theButton = Request.Form["theButton"];
+    var artistName = "";
+    var albumName = "";
+    var albumYear = "";
+    var albumLabel = "";
+
+    var albumQuery = "SELECT AlbumId, Title, ArtistId, ReleaseYear, ReleaseLabel " +
+                        "FROM Albums " +
+                        "WHERE AlbumId = @0";
+
+    var albumResult = db.QuerySingle(albumQuery, albumID);
+
+    var artistQuery = "SELECT ArtistId, Name "
+                    + "FROM Artists "
+                    + "ORDER BY 2";
+
+    var artistResults = db.Query(artistQuery);
+
+    var artistUpdate = "UPDATE Albums "+
+                       "SET Title =@0, ArtistId = @1, ReleaseYear = @2, ReleaseLabel = @3 " +
+                       "WHERE AlbumId = @4";
+
+    Validation.Add("titleEntry",
+        Validator.Required("Album Name is required"));
+    Validation.Add("yearEntry",
+        Validator.Integer("Record year must be a whole number"),
+        Validator.Range(1950, DateTime.Today.Year, "Year must be between 1950 and 2020"),
+        Validator.Required("Album Year is required"));
+
+
+}
+@section head{
+    <link href="~/Content/myStyleSheet.css" rel="stylesheet" />
+}
+@section banner{
+    <h1>Exercise 03: Database Data Entry</h1>
+}
+
+@if (IsPost)
+{
+    if (theButton.Equals("Clear"))
+    {
+        //Go back to start
+        Response.Redirect("Exercise02A.cshtml");
+    }
+    else if (theButton.Equals("update"))//do the updates
+    {
+        //fill from form
+        artistName = Request.Form["artistSelect"];
+        albumName = Request.Form["titleEntry"];
+        albumYear = Request.Form["yearEntry"];
+        albumLabel = Request.Form["labelEntry"];
+
+
+        if (Validation.IsValid())
+        {
+            try
+            {
+                db.Execute(artistUpdate, albumName,
+                    string.IsNullOrEmpty(artistName) ? null : artistName,
+                    string.IsNullOrEmpty(albumYear) ? null : albumYear,
+                    string.IsNullOrEmpty(albumLabel) ? null : albumLabel,
+                    albumID);
+
+                <p class="col-sm-11 text-center">
+                    <span style="color:green">
+                        Album updated
+                    </span>
+                </p>
+            }
+            catch (Exception ex)
+            {
+                <p class="col-sm-11 text-center">
+                    <span style="color:firebrick">
+                        <strong>@ex.Message</strong>
+                    </span>
+                </p>
+            }
+        }
+        else
+        {
+
+            <p>Validation failed</p>
+        }
+    }
+    else //all thats left is delete
+    {
+        try
+        {
+            var deleteCommand = "DELETE Albums WHERE AlbumID = @0";
+            int deleteResult = db.Execute(deleteCommand, albumID);
+            if (deleteResult > 0) //if its greater than 0, the command succeeeded
+            {
+                <p>
+                    <span style="color:green">
+                        Album deleted.
+                    </span>
+                </p>
+            }
+            else
+            {
+                <p>Delete had no result. Nothing deleted. Album may have been deleted already.</p>
+            }
+        }
+
+        catch (Exception ex)
+        {
+            <p>
+                <span style="color:blue">
+                    Deleted failed. Error @ex.Message
+                </span>
+
+            </p>
+        }
+    }
+}
+
+else //capture data the first time the page loads
+{
+    albumName = albumResult.Title.ToString();
+    albumYear = albumResult.ReleaseYear.ToString();
+    albumLabel = albumResult.ReleaseLabel == null ? "" : albumResult.ReleaseLabel.ToString();
+
+}
+
+<div>
+    @Html.ValidationSummary()
+    <form id="EX01" method="post">
+        <div class="row">
+            <div class="col-sm-3">
+                <!-- column labels-->
+                <label> Title:</label><br />
+                <label> Artist:</label><br />
+                <label> Year:</label><br />
+                <label> Label:</label><br />
+            </div>
+            <div class="col-md-2">
+                <!-- inputs here-->
+                <input type="text" id="titleEntry" name="titleEntry" maxlength="160" value="@albumName" /><br />
+                <select id="artistSelect" name="artistSelect">
+                    <option value="0">select ...</option>
+                    @foreach (var item in artistResults)
+                    {
+                        if (albumResult.ArtistID == (item[0]))
+                        {
+                            <option value="@item[0]" selected>@item.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@item[0]">@item.Name</option>
+                        }
+                    }
+                </select><br />
+                <input type="text" id="yearEntry" name="yearEntry" placeholder="1950-2020" value="@albumYear" /><br />
+                <input type="text" id="labelEntry" name="labelEntry" maxlength="50" value="@albumLabel" /><br />
+
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <!-- make some buttons for user to interact with-->
+            &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+            <button type="submit" id="PressMe" name="theButton" value="update" class="btn btn-primary" style="width:90px">Update</button>
+            &nbsp;&nbsp;
+            <button type="submit" id="PressMe" name="theButton" value="delete" class="btn btn-primary" style="width:90px">Delete</button>
+            &nbsp;&nbsp;
+            <input type="submit" id="PressMe" name="theButton" value="Clear" class="btn" style="width:90px" />
+        </div>
+
+
+    </form>
+</div>
+@section footer{
+    <p>&copy CPSC1517, Nait Today's date is @DateTime.Today.ToLongDateString().</p> }
