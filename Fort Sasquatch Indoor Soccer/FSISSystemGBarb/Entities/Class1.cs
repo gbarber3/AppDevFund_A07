@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NorthwindSystem.DAL
+namespace FSISSystemGBarb.Entities
 {
-    class Dummy
+    class Class1
     {
     }
 }
