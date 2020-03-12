@@ -167,6 +167,7 @@
     <Content Include="Web.config" />
     <Content Include="Bundle.config" />
     <Content Include="Site.Mobile.Master" />
+    <Content Include="WebConnectionStrings.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -240,9 +241,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FSISSystemGBarb\FSISSystemGBarb.csproj">
-      <Project>{3486f05a-9f6f-40ba-84b0-46c44bf21f93}</Project>
-      <Name>FSISSystemGBarb</Name>
+    <ProjectReference Include="..\FSISSystem.GBarb\FSISSystem.GBarb.csproj">
+      <Project>{60af13c2-7e05-43d6-a3a7-bbdefd407c6e}</Project>
+      <Name>FSISSystem.GBarb</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
