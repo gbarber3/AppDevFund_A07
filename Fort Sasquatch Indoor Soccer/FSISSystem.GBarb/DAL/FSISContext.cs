@@ -16,10 +16,10 @@ namespace FSISSystem.GBarb.DAL
 
         }
 
-        public DbSet<Guardian> Guardian { get; set; }
+        public DbSet<Guardian> Guardians { get; set; }
 
-        public DbSet<Player> Player { get; set; }
+        public DbSet<Player> Players { get; set; }
 
-        public DbSet<Team> Team { get; set; }
+        public DbSet<Team> Teams { get; set; }
     }
 }

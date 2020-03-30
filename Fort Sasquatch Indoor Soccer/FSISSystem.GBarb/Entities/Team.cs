@@ -12,7 +12,7 @@ namespace FSISSystem.GBarb.Entities
     [Table("Team")]
     class Team
     {
-        [Key]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int TeamID { get; set; }
         public string TeamName { get; set; }
         public string Coach { get; set; }
