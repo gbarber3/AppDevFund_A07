@@ -10,7 +10,7 @@ using FSISSystem.GBarb.Entities;
 
 namespace FSISSystem.GBarb.BLL
 {
-    class TeamController
+    public class TeamController
     { 
         public List<Team> Team_List()
         {

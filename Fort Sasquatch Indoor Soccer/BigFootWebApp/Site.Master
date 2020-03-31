@@ -77,7 +77,9 @@
                             NavigateUrl="~/Default.aspx">  </asp:MenuItem>
                        <asp:MenuItem Text="Exercises" ToolTip="Dropdown Menu">
                                 <asp:MenuItem Text="Ex 5 Page" ToolTip="sub menu item" 
-                                    NavigateUrl="~/ExercisePages/ExerciseHome.aspx"/>                               
+                                    NavigateUrl="~/ExercisePages/ExerciseHome.aspx"/>
+                               <asp:MenuItem Text="Ex 6 Page" ToolTip="sub menu item" 
+                                        NavigateUrl="~/ExercisePages/Exercise06.aspx"/>   
                       </asp:MenuItem>
                       <asp:MenuItem Text="Contact" ToolTip="Contact"
                            NavigateUrl="~/Contact.aspx"></asp:MenuItem>

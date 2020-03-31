@@ -11,7 +11,7 @@ using FSISSystem.GBarb.Entities;
 
 namespace FSISSystem.GBarb.BLL
 {
-    class GuardianController
+    public class GuardianController
     {
     }
 }

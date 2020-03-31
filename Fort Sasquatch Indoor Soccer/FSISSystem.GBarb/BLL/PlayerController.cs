@@ -9,15 +9,17 @@ using System.Data.SqlClient;
 using FSISSystem.GBarb.DAL;
 using FSISSystem.GBarb.Entities;
 
+
 namespace FSISSystem.GBarb.BLL
 {
-    class PlayerController
+    public class PlayerController
     {
-        public Player Player_GetByTeam(int teamID)
+        public List<Player> Player_GetByTeam(int teamID)
         {
             using (var context = new FSISContext())
             {
-                return context.Players.Find(teamID);
+                IEnumerable<Player> results = context.Database.SqlQuery<Player>("Player_GetByTeam @TeamID", new SqlParameter("TeamID", teamID));
+                return results.ToList();
             }
         }
     }

@@ -11,7 +11,7 @@ namespace FSISSystem.GBarb.Entities
 {
     [Table("Guardian")]
 
-    class Guardian
+    public class Guardian
     {
         [Key]
         public int GuardianID { get; set; }

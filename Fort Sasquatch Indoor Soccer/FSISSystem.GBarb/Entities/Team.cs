@@ -10,7 +10,7 @@ using System.ComponentModel.DataAnnotations;
 namespace FSISSystem.GBarb.Entities
 {
     [Table("Team")]
-    class Team
+    public class Team
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int TeamID { get; set; }
